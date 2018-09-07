@@ -62,7 +62,15 @@ public class SnakePanel extends JPanel implements KeyListener {
 			g.fillRect(current.getX(), current.getY(), 20, 20);
 		} else {
 			Random random = new Random();
-			current = new Food(random.nextInt(40) * 20, random.nextInt(25) * 20 + 100, Color.BLACK, false);
+			int tempx = random.nextInt(39);
+			while(tempx == 0) {
+				tempx = random.nextInt(39);
+			}
+			int tempy = random.nextInt(24);
+			while(tempy == 0) {
+				tempy = random.nextInt(24);
+			}
+			current = new Food(tempx * 20, tempy * 20 + 100, Color.BLACK, false);
 		}
 
 	}
@@ -95,12 +103,14 @@ public class SnakePanel extends JPanel implements KeyListener {
 		int y = snake.getBody().get(0).getY();
 		// 判断是否撞墙
 		if (x > 780 || x < 0 || y > 580 || y < 100) {
+			System.out.println("撞墙了");
 			return true;
 		}
 		// 判断蛇头是否碰到自己的身体
 		for (int i = 4; i < snake.getBody().size(); i++) {
 			Food f = snake.getBody().get(i);
 			if (x == f.getX() && y == f.getY()) {
+				System.out.println("吃到自己身体了");
 				return true;
 			}
 		}
@@ -136,7 +146,11 @@ public class SnakePanel extends JPanel implements KeyListener {
 						break;
 					}
 					snake.getBody().add(add);
-					delay -= 10;
+					if (score > 13) {
+						delay -= 5;
+					} else {
+						delay -= 10;
+					}
 					score++;
 				}
 			} else if (status == 0) {
@@ -146,7 +160,7 @@ public class SnakePanel extends JPanel implements KeyListener {
 			}
 			if (isOver()) {
 				status = -1;
-				if (score < 8) {
+				if (score < 7) {
 					message = "游戏结束，兄弟，去医院看看吧";
 				} else if (score < 10) {
 					message = "游戏结束，你达标了";
